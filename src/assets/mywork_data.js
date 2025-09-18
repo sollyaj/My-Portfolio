@@ -8,8 +8,10 @@ import project6_img from '../assets/project_6.svg'
 const mywork_data = [
     {
         w_no:1,
-        w_name:"Web design",
-        w_img:project1_img
+        w_name: "Web design",
+        w_img: project1_img,
+        link: "https://sollyaj.github.io/My_Headphone_Project",
+        description: "A responsive product landing page built with HTML and CSS."
     },
     {
         w_no:2,
