@@ -1,83 +1,102 @@
-import React, { useState, useRef } from "react";
-import logo from "../../assets/logo.svg";
-import underline from "../../assets/nav_underline.svg";
+import React, { useState } from "react";
 import AnchorLink from "react-anchor-link-smooth-scroll";
+import logo from "../../assets/logo.svg";
 import menu_open from "../../assets/menu_open.svg";
 import menu_close from "../../assets/menu_close.svg";
+import underline from "../../assets/nav_underline.svg";
+
+const navLinks = [
+  { id: "home", label: "Home" },
+  { id: "about", label: "About Me" },
+  { id: "services", label: "Services" },
+  { id: "work", label: "Portfolio" },
+  { id: "contact", label: "Contact" },
+];
 
 const Navbar = () => {
-  const [menu, setMenu] = useState("home");
-  const menuRef = useRef();
-
-  const openMenu = () => {
-    menuRef.current.style.right = "0";
-  };
-
-  const closeMenu = () => {
-    menuRef.current.style.right = "-350px";
-  };
-
-  const menuItems = [
-    { id: "home", label: "Home" },
-    { id: "about", label: "About Me" },
-    { id: "services", label: "Services" },
-    { id: "work", label: "Portfolio" },
-    { id: "contact", label: "Contact" },
-  ];
+  const [active, setActive] = useState("home");
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <div className="flex items-center justify-between my-5 mx-[170px] max-md:mx-[50px]">
+    <nav className="flex justify-between items-center py-6 px-4 md:px-16">
       {/* Logo */}
-      <img src={logo} alt="logo" />
+      <img src={logo} alt="logo" className="h-10 md:h-12" />
 
-      {/* Mobile menu open icon */}
-      <img
-        src={menu_open}
-        onClick={openMenu}
-        alt="open menu"
-        className="hidden max-md:block fixed right-[30px] z-50 cursor-pointer"
-      />
-
-      {/* Navigation Menu */}
-      <ul
-        ref={menuRef}
-        className="flex items-center list-none gap-[60px] text-[20px] max-md:flex-col max-md:items-start max-md:gap-[30px] max-md:bg-[#1f0016] max-md:w-[350px] max-md:h-screen max-md:fixed max-md:top-0 max-md:right-[-350px] max-md:z-40 max-md:transition-[right] max-md:duration-500"
-      >
-        {/* Mobile close icon */}
-        <img
-          src={menu_close}
-          onClick={closeMenu}
-          alt="close menu"
-          className="hidden max-md:block relative top-[30px] left-[290px] w-[30px] cursor-pointer"
-        />
-
-        {menuItems.map((item) => (
-          <li
-            key={item.id}
-            className="flex flex-col gap-[5px] whitespace-nowrap cursor-pointer max-md:flex-row max-md:gap-[20px] max-md:pl-[100px] max-md:text-[30px]"
-          >
+      {/* Desktop Links */}
+      <ul className="hidden md:flex items-center gap-6 lg:gap-10 text-white font-medium">
+        {navLinks.map((link) => (
+          <li key={link.id} className="flex flex-col items-center cursor-pointer">
             <AnchorLink
-              className="no-underline text-white"
+              href={`#${link.id}`}
               offset={50}
-              href={`#${item.id}`}
+              onClick={() => setActive(link.id)}
+              className="hover:text-yellow-500 transition-colors"
             >
-              <p onClick={() => setMenu(item.id)}>{item.label}</p>
+              {link.label}
             </AnchorLink>
-            {menu === item.id && <img src={underline} alt="underline" />}
+            {active === link.id && (
+              <img src={underline} alt="underline" className="mt-1 w-6" />
+            )}
           </li>
         ))}
       </ul>
 
-      {/* Connect button */}
-      <div className="px-[60px] py-[15px] rounded-[50px] bg-gradient-to-r from-[#DA7C25] to-[#B923E1] text-[22px] cursor-pointer transition-transform duration-500 hover:scale-105 max-md:hidden">
-        <AnchorLink className="no-underline text-white" offset={50} href="#contact">
+      {/* Connect Button */}
+      <div className="hidden md:flex items-center ml-4 lg:ml-8">
+        <AnchorLink
+          href="#contact"
+          offset={50}
+          className="px-4 py-2 rounded-full bg-gradient-to-r from-[#DF8908] to-[#B415FF] text-white text-base font-medium hover:scale-105 transition-transform"
+        >
           Connect With Me
         </AnchorLink>
       </div>
-    </div>
+
+      {/* Mobile Menu Button */}
+      <div className="md:hidden">
+        <img
+          src={menuOpen ? menu_close : menu_open}
+          alt="menu"
+          className="h-6 w-6 cursor-pointer"
+          onClick={() => setMenuOpen(!menuOpen)}
+        />
+      </div>
+
+      {/* Mobile Menu */}
+      <div
+        className={`fixed top-0 right-0 h-full w-64 bg-[#1f0016] flex flex-col gap-8 p-8 transition-transform duration-500 z-40
+          ${menuOpen ? "translate-x-0" : "translate-x-full"}`}
+      >
+        {navLinks.map((link) => (
+          <AnchorLink
+            key={link.id}
+            href={`#${link.id}`}
+            offset={50}
+            onClick={() => {
+              setActive(link.id);
+              setMenuOpen(false);
+            }}
+            className="text-white text-xl font-semibold"
+          >
+            {link.label}
+          </AnchorLink>
+        ))}
+
+        <AnchorLink
+          href="#contact"
+          offset={50}
+          onClick={() => setMenuOpen(false)}
+          className="mt-4 px-4 py-2 rounded-full bg-gradient-to-r from-[#DF8908] to-[#B415FF] text-white text-base font-medium text-center block"
+        >
+          Connect With Me
+        </AnchorLink>
+      </div>
+    </nav>
   );
 };
 
 export default Navbar;
+
+
 
 
